@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { handle as openaiHandler } from "../../openai";
 import { handle as azureHandler } from "../../azure";
 import { handle as googleHandler } from "../../google";
+import { handle as vertexHandler } from "../../vertex";
 import { handle as anthropicHandler } from "../../anthropic";
 import { handle as baiduHandler } from "../../baidu";
 import { handle as bytedanceHandler } from "../../bytedance";
@@ -28,6 +29,8 @@ async function handle(
       return azureHandler(req, { params });
     case ApiPath.Google:
       return googleHandler(req, { params });
+    case ApiPath.GoogleVertex:
+      return vertexHandler(req, { params });
     case ApiPath.Anthropic:
       return anthropicHandler(req, { params });
     case ApiPath.Baidu:

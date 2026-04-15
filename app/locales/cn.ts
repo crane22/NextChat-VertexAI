@@ -385,17 +385,38 @@ const cn = {
         },
 
         Endpoint: {
-          Title: "终端地址",
-          SubTitle: "示例：",
+          Title: "接口地址",
+          SubTitle: "例：",
         },
 
         ApiVersion: {
-          Title: "API 版本（仅适用于 gemini-pro）",
+          Title: "接口版本 (仅针对于 gemini-pro 有效)",
           SubTitle: "选择一个特定的 API 版本",
         },
         GoogleSafetySettings: {
-          Title: "Google 安全过滤级别",
-          SubTitle: "设置内容过滤级别",
+          Title: "Google 安全检查等级",
+          SubTitle: "请选择一个合适的安全检查等级",
+        },
+      },
+      GoogleVertex: {
+        Endpoint: {
+          Title: "接口地址",
+          SubTitle: "例：https://{region}-aiplatform.googleapis.com/v1",
+        },
+        ProjectId: {
+          Title: "项目 ID",
+          SubTitle: "Google Cloud 项目 ID",
+          Placeholder: "输入您的项目 ID",
+        },
+        Region: {
+          Title: "区域",
+          SubTitle: "Google Cloud 区域",
+          Placeholder: "us-central1",
+        },
+        ApiKey: {
+          Title: "API 密钥或凭证",
+          SubTitle: "Google Cloud API 密钥或 ADC Token",
+          Placeholder: "API 密钥或 Token",
         },
       },
       Baidu: {

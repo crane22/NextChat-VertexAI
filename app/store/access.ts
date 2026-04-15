@@ -83,6 +83,12 @@ const DEFAULT_ACCESS_STATE = {
   googleApiVersion: "v1",
   googleSafetySettings: GoogleSafetySettingsThreshold.BLOCK_ONLY_HIGH,
 
+  // google vertex
+  vertexUrl: "",
+  vertexProjectId: "",
+  vertexRegion: "",
+  vertexApiKey: "",
+
   // anthropic
   anthropicUrl: DEFAULT_ANTHROPIC_URL,
   anthropicApiKey: "",
@@ -184,6 +190,10 @@ export const useAccessStore = createPersistStore(
       return ensure(get(), ["googleApiKey"]);
     },
 
+    isValidGoogleVertex() {
+      return ensure(get(), ["vertexProjectId", "vertexRegion", "vertexApiKey"]);
+    },
+
     isValidAnthropic() {
       return ensure(get(), ["anthropicApiKey"]);
     },
@@ -234,6 +244,7 @@ export const useAccessStore = createPersistStore(
         this.isValidOpenAI() ||
         this.isValidAzure() ||
         this.isValidGoogle() ||
+        this.isValidGoogleVertex() ||
         this.isValidAnthropic() ||
         this.isValidBaidu() ||
         this.isValidByteDance() ||

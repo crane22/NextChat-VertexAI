@@ -543,6 +543,27 @@ const en: LocaleType = {
           SubTitle: "Select a safety filtering level",
         },
       },
+      GoogleVertex: {
+        Endpoint: {
+          Title: "Endpoint Address",
+          SubTitle: "Example: https://{region}-aiplatform.googleapis.com/v1",
+        },
+        ProjectId: {
+          Title: "Project ID",
+          SubTitle: "Google Cloud Project ID",
+          Placeholder: "Your Project ID",
+        },
+        Region: {
+          Title: "Region",
+          SubTitle: "Google Cloud Region",
+          Placeholder: "us-central1",
+        },
+        ApiKey: {
+          Title: "API Key or Token",
+          SubTitle: "Google Cloud API Key or ADC Token",
+          Placeholder: "API Key / Access Token",
+        },
+      },
       AI302: {
         ApiKey: {
           Title: "302.AI API Key",

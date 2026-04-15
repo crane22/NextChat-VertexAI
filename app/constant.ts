@@ -134,6 +134,7 @@ export enum ServiceProvider {
   DeepSeek = "DeepSeek",
   SiliconFlow = "SiliconFlow",
   "302.AI" = "302.AI",
+  GoogleVertex = "GoogleVertex",
 }
 
 // Google API safety settings, see https://ai.google.dev/gemini-api/docs/safety-settings
@@ -161,6 +162,7 @@ export enum ModelProvider {
   DeepSeek = "DeepSeek",
   SiliconFlow = "SiliconFlow",
   "302.AI" = "302.AI",
+  GoogleVertex = "GoogleVertex",
 }
 
 export const Stability = {
@@ -493,7 +495,7 @@ export const VISION_MODEL_REGEXES = [
   /o3/,
   /o4-mini/,
   /grok-4/i,
-  /gpt-5/
+  /gpt-5/,
 ];
 
 export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
@@ -541,6 +543,14 @@ const openaiModels = [
   "o4-mini",
 ];
 
+const vertexModels = [
+  "gemini-3.1-pro-preview",
+  "gemini-2.5-pro",
+  "gemini-1.5-pro",
+  "gemini-1.5-flash",
+  "gemini-1.5-pro-002",
+];
+
 const googleModels = [
   "gemini-1.5-pro-latest",
   "gemini-1.5-pro",
@@ -561,7 +571,7 @@ const googleModels = [
   "gemini-2.0-pro-exp",
   "gemini-2.0-pro-exp-02-05",
   "gemini-2.5-pro-preview-06-05",
-  "gemini-2.5-pro"
+  "gemini-2.5-pro",
 ];
 
 const anthropicModels = [
@@ -775,6 +785,17 @@ export const DEFAULT_MODELS = [
       providerName: "Google",
       providerType: "google",
       sorted: 3,
+    },
+  })),
+  ...vertexModels.map((name) => ({
+    name,
+    available: true,
+    sorted: seq++,
+    provider: {
+      id: "google_vertex",
+      providerName: "GoogleVertex",
+      providerType: "google_vertex",
+      sorted: 16,
     },
   })),
   ...anthropicModels.map((name) => ({

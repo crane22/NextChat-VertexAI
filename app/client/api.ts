@@ -13,6 +13,7 @@ import {
 } from "../store";
 import { ChatGPTApi, DalleRequestPayload } from "./platforms/openai";
 import { GeminiProApi } from "./platforms/google";
+import { VertexApi } from "./platforms/vertex";
 import { ClaudeApi } from "./platforms/anthropic";
 import { ErnieApi } from "./platforms/baidu";
 import { DoubaoApi } from "./platforms/bytedance";
@@ -141,6 +142,9 @@ export class ClientApi {
       case ModelProvider.GeminiPro:
         this.llm = new GeminiProApi();
         break;
+      case ModelProvider.GoogleVertex:
+        this.llm = new VertexApi();
+        break;
       case ModelProvider.Claude:
         this.llm = new ClaudeApi();
         break;
@@ -257,6 +261,8 @@ export function getHeaders(ignoreHeaders: boolean = false) {
   function getConfig() {
     const modelConfig = chatStore.currentSession().mask.modelConfig;
     const isGoogle = modelConfig.providerName === ServiceProvider.Google;
+    const isGoogleVertex =
+      modelConfig.providerName === ServiceProvider.GoogleVertex;
     const isAzure = modelConfig.providerName === ServiceProvider.Azure;
     const isAnthropic = modelConfig.providerName === ServiceProvider.Anthropic;
     const isBaidu = modelConfig.providerName == ServiceProvider.Baidu;
@@ -273,6 +279,8 @@ export function getHeaders(ignoreHeaders: boolean = false) {
     const isEnabledAccessControl = accessStore.enabledAccessControl();
     const apiKey = isGoogle
       ? accessStore.googleApiKey
+      : isGoogleVertex
+      ? accessStore.vertexApiKey
       : isAzure
       ? accessStore.azureApiKey
       : isAnthropic
@@ -300,6 +308,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
       : accessStore.openaiApiKey;
     return {
       isGoogle,
+      isGoogleVertex,
       isAzure,
       isAnthropic,
       isBaidu,
@@ -329,6 +338,7 @@ export function getHeaders(ignoreHeaders: boolean = false) {
 
   const {
     isGoogle,
+    isGoogleVertex,
     isAzure,
     isAnthropic,
     isBaidu,
@@ -369,6 +379,8 @@ export function getClientApi(provider: ServiceProvider): ClientApi {
   switch (provider) {
     case ServiceProvider.Google:
       return new ClientApi(ModelProvider.GeminiPro);
+    case ServiceProvider.GoogleVertex:
+      return new ClientApi(ModelProvider.GoogleVertex);
     case ServiceProvider.Anthropic:
       return new ClientApi(ModelProvider.Claude);
     case ServiceProvider.Baidu:
