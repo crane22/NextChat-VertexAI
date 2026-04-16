@@ -3,6 +3,7 @@ import { auth } from "./auth";
 import { getServerSideConfig } from "@/app/config/server";
 import { ApiPath, ModelProvider } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
+import { GoogleAuth } from "google-auth-library";
 
 const serverConfig = getServerSideConfig();
 
@@ -26,9 +27,41 @@ export async function handle(
   const bearToken = req.headers.get("Authorization") || "";
   const token = bearToken.trim().replaceAll("Bearer ", "").trim();
 
-  const apiKey = token ? token : serverConfig.vertexApiKey;
+  let accessToken = token;
 
-  if (!apiKey) {
+  try {
+    if (!accessToken && serverConfig.vertexApiKey) {
+      accessToken = serverConfig.vertexApiKey;
+    }
+
+    if (!accessToken) {
+      // Use GoogleAuth (Application Default Credentials)
+      const auth = new GoogleAuth({
+        scopes: "https://www.googleapis.com/auth/cloud-platform",
+      });
+      const client = await auth.getClient();
+      const credentials = await client.getAccessToken();
+      if (credentials?.token) {
+        accessToken = credentials.token;
+      }
+    } else if (accessToken.startsWith("{")) {
+      // It's a JSON key provided as string
+      const credentials = JSON.parse(accessToken);
+      const auth = new GoogleAuth({
+        credentials,
+        scopes: "https://www.googleapis.com/auth/cloud-platform",
+      });
+      const client = await auth.getClient();
+      const tokenResponse = await client.getAccessToken();
+      if (tokenResponse?.token) {
+        accessToken = tokenResponse.token;
+      }
+    }
+  } catch (e) {
+    console.error("[Vertex Auth] Failed to get access token: ", e);
+  }
+
+  if (!accessToken) {
     return NextResponse.json(
       {
         error: true,
@@ -39,8 +72,9 @@ export async function handle(
       },
     );
   }
+
   try {
-    const response = await request(req, apiKey);
+    const response = await request(req, accessToken);
     return response;
   } catch (e) {
     console.error("[Vertex] ", e);
@@ -51,7 +85,6 @@ export async function handle(
 export const GET = handle;
 export const POST = handle;
 
-export const runtime = "edge";
 export const preferredRegion = [
   "bom1",
   "cle1",
