@@ -38,6 +38,11 @@ declare global {
       GOOGLE_API_KEY?: string;
       GOOGLE_URL?: string;
 
+      // vertex only
+      GOOGLE_VERTEX_PROJECT_ID?: string;
+      GOOGLE_VERTEX_REGION?: string;
+      GOOGLE_VERTEX_API_KEY?: string; // Token or API Key
+
       // google tag manager
       GTM_ID?: string;
 
@@ -155,6 +160,10 @@ export const getServerSideConfig = () => {
 
   const isAzure = !!process.env.AZURE_URL;
   const isGoogle = !!process.env.GOOGLE_API_KEY;
+  const isGoogleVertex =
+    !!process.env.GOOGLE_VERTEX_PROJECT_ID &&
+    !!process.env.GOOGLE_VERTEX_REGION &&
+    !!process.env.GOOGLE_VERTEX_API_KEY;
   const isAnthropic = !!process.env.ANTHROPIC_API_KEY;
   const isTencent = !!process.env.TENCENT_API_KEY;
 
@@ -197,6 +206,11 @@ export const getServerSideConfig = () => {
     isGoogle,
     googleApiKey: getApiKey(process.env.GOOGLE_API_KEY),
     googleUrl: process.env.GOOGLE_URL,
+
+    isGoogleVertex,
+    vertexProjectId: process.env.GOOGLE_VERTEX_PROJECT_ID,
+    vertexRegion: process.env.GOOGLE_VERTEX_REGION,
+    vertexApiKey: getApiKey(process.env.GOOGLE_VERTEX_API_KEY),
 
     isAnthropic,
     anthropicApiKey: getApiKey(process.env.ANTHROPIC_API_KEY),

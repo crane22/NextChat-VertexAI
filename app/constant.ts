@@ -75,6 +75,7 @@ export enum ApiPath {
   DeepSeek = "/api/deepseek",
   SiliconFlow = "/api/siliconflow",
   "302.AI" = "/api/302ai",
+  GoogleVertex = "/api/vertex",
 }
 
 export enum SlotID {

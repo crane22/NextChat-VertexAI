@@ -26,10 +26,7 @@ export async function handle(
   const bearToken = req.headers.get("Authorization") || "";
   const token = bearToken.trim().replaceAll("Bearer ", "").trim();
 
-  // For Vertex, we require the user to provide the token from client,
-  // or we could use serverConfig if it was implemented (e.g. serverConfig.vertexApiKey)
-  // Let's assume the user configures it in the client for now.
-  const apiKey = token;
+  const apiKey = token ? token : serverConfig.vertexApiKey;
 
   if (!apiKey) {
     return NextResponse.json(
@@ -76,13 +73,22 @@ async function request(req: NextRequest, apiKey: string) {
   let path = `${req.nextUrl.pathname}`.replaceAll(ApiPath.GoogleVertex, "");
 
   const segments = path.split("/");
-  let region = "us-central1";
+  let region = serverConfig.vertexRegion || "us-central1";
+  let projectId = serverConfig.vertexProjectId || "";
+
   if (
     segments.length >= 5 &&
     segments[1] === "projects" &&
     segments[3] === "locations"
   ) {
+    projectId = segments[2];
     region = segments[4];
+  } else {
+    // If path doesn't contain projects/locations, we construct it using serverConfig
+    const modelMatch = path.match(/models\/([^:]+):/);
+    if (modelMatch && projectId && region) {
+      path = `/projects/${projectId}/locations/${region}/publishers/google/${modelMatch[0]}streamGenerateContent`;
+    }
   }
 
   let baseUrl = `https://${region}-aiplatform.googleapis.com/v1`;
